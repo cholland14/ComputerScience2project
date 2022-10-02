@@ -1,0 +1,1 @@
+Item{itemId='ITEM-1', itemName='carrot', quantityOnHand=0', costExpenditure=5.0}

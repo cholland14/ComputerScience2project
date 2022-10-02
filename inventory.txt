@@ -1,0 +1,3 @@
+Item{itemId='ITEM-1', itemName='carrot', quantityOnHand=0', costExpenditure=5.0}
+Item{itemId='ITEM-2', itemName='apples', quantityOnHand=0', costExpenditure=2.0}
+Item{itemId='ITEM-3', itemName='bananas', quantityOnHand=0', costExpenditure=10.0}

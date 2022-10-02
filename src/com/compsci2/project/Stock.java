@@ -1,6 +1,6 @@
 package com.compsci2.project;
 
-public class Stock {
+public class Stock implements Comparable<Stock> {
 
     private static int stockCount = 0;
     private String itemId;
@@ -10,7 +10,7 @@ public class Stock {
 
     public Stock(String itemName, double costExpenditurePerItem, int quantityOnHand) {
         this.itemName = itemName;
-        this.quantity = quantity;
+        this.quantity = quantityOnHand;
         this.costExpenditure = costExpenditurePerItem;
         itemId = generateItemId();
     }
@@ -23,15 +23,20 @@ public class Stock {
         this.quantity = quantityOnHand;
     }
 
-    public void useItems(int amountUsed) {
-        quantity -= amountUsed;
+    public String getItemName() {
+        return itemName;
     }
 
-    private String generateItemId() {
-        //Important to not change "ITEM-" due to dependency
-        //in getNumericalItemId
-        stockCount++;
-        return "ITEM-" + stockCount;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public double getCostExpenditure() {
+        return costExpenditure;
+    }
+
+    public void setCostExpenditure(double costExpenditure) {
+        this.costExpenditure = costExpenditure;
     }
 
     public int getNumericalItemId() {
@@ -43,20 +48,42 @@ public class Stock {
         return itemId;
     }
 
-    public double getCostExpenditure() {
-        return costExpenditure;
+    public void setItemId(String newItemId) {
+        stockCount--;
+        itemId = newItemId;
     }
 
-    public void setCostExpenditure(double costExpenditure) {
-        this.costExpenditure = costExpenditure;
+    private String generateItemId() {
+        //getNumericalItemId requires a 5 character string here
+        stockCount++;
+        return "ITEM-" + stockCount;
     }
+
+    public void useItems(int amountUsed) {
+        quantity -= amountUsed;
+    }
+
 
     @Override
     public String toString() {
-        return "itemId='" + itemId + '\'' +
-                ", itemName='" + itemName + '\'' +
-                ", quantityOnHand=" + quantity +
-                ", costExpenditure=" + costExpenditure +
+        return "Item{" +
+                "itemId= '" + itemId + '\'' +
+                ", Name= '" + itemName + '\'' +
+                ", Quantity= '" + quantity + '\''+
+                ", costExpenditure= '$" + costExpenditure + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Stock o) {
+        String otherId = o.getItemId();
+        return otherId.compareTo(getItemId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Stock)
+            return ((Stock) obj).getItemId().equals(itemId);
+        else return false;
     }
 }
