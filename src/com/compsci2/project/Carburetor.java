@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 public class Carburetor extends Stock{
 
-    private static int carbCount = 0;
     private int[][] requiredStock;
     private ArrayList<Stock> inventory;
 
@@ -14,8 +13,6 @@ public class Carburetor extends Stock{
     public Carburetor(String carbName, int quantityOnHand, int[][] numericalItemId_quantity, ArrayList<Stock> inventory) {
         super(carbName,0,quantityOnHand);
         requiredStock = numericalItemId_quantity;
-        carbCount++;
-        setItemId("CARB-"+carbCount);
         //should store the arrayList as a reference location so that any updates made afterwards can alao be found in the array
         this.inventory = inventory;
         setCostExpenditure(getCarbCostExpenditure());
@@ -60,10 +57,11 @@ public class Carburetor extends Stock{
                     //breaks the for loop once item is found
                     break;
                 }
-                // int/int yields whole number amount that is needed
+                // int/int yields whole number amount that is needed and stores it in the array
             }
             values[i] = inventoryQuantity/neededQuantity;
         }
+        //Sorts the array and returns the lowest value
         Arrays.sort(values);
         return values[0];
     }
@@ -98,7 +96,6 @@ public class Carburetor extends Stock{
     public String getItemsRequiredToMake() {
         String requiredItems = "Item ID | Item Name | Needed Quantity \n";
         String itemId = "";
-        String itemName = "";
         int neededStockQuantity = 0;
         for (int i = 0; i < requiredStock.length; i++) {
             itemId = "ITEM-" + requiredStock[i][0];
@@ -117,11 +114,11 @@ public class Carburetor extends Stock{
     @Override
     public String toString() {
         return "Carb{" +
-                "itemId='" + getItemId() + '\'' +
-                ", Name='" + getItemName() + '\'' +
-                ", Quantity='" + getQuantityOnHand() + '\'' +
-                ", costExpenditure='$" + getCostExpenditure() + '\'' +
-                ", ableToMake='" + ableToMake() + '\'' +
+                "itemId= '" + getItemId() + '\'' +
+                ", Name= '" + getItemName() + '\'' +
+                ", Quantity= '" + getQuantityOnHand() + '\'' +
+                ", costExpenditure= '$" + getCostExpenditure() + '\'' +
+                ", ableToMake= '" + ableToMake() + '\'' +
                 '}';
     }
 }

@@ -3,7 +3,7 @@ package com.compsci2.project;
 public class Stock implements Comparable<Stock> {
 
     private static int stockCount = 0;
-    private String itemId;
+    private int itemId;
     private String itemName;
     private int quantity;
     private double costExpenditure;
@@ -39,24 +39,22 @@ public class Stock implements Comparable<Stock> {
         this.costExpenditure = costExpenditure;
     }
 
-    public int getNumericalItemId() {
-        int numericalItemId = Integer.parseInt(itemId.substring(5));
-        return numericalItemId;
-    }
-
-    public String getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
-    public void setItemId(String newItemId) {
-        stockCount--;
-        itemId = newItemId;
-    }
-
-    private String generateItemId() {
+    private int generateItemId() {
         //getNumericalItemId requires a 5 character string here
         stockCount++;
-        return "ITEM-" + stockCount;
+        Integer intId = (Integer) stockCount;
+        String stringId = intId.toString();
+        String stringReturnId = "";
+        for (int i =0 ; i<8- stringId.length(); i++) {
+            stringReturnId += 0;
+        }
+        stringReturnId += stringId;
+        int returnId = Integer.parseInt(stringReturnId);
+        return returnId;
     }
 
     public void useItems(int amountUsed) {
@@ -76,14 +74,15 @@ public class Stock implements Comparable<Stock> {
 
     @Override
     public int compareTo(Stock o) {
-        String otherId = o.getItemId();
-        return otherId.compareTo(getItemId());
+        if (this.itemId < o.itemId) return -1;
+        else if (this.itemId > o.itemId) return 1;
+        else return 0;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Stock)
-            return ((Stock) obj).getItemId().equals(itemId);
+            return (this.itemId == ((Stock) obj).itemId);
         else return false;
     }
 }
