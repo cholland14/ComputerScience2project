@@ -10,10 +10,10 @@ public class Carburetor extends Stock{
 
     //Array should store items from stock that are necessary to build carburetor
     //first column should contain itemId and second column should contain quantity needed
-    public Carburetor(String carbName, int quantityOnHand, int[][] numericalItemId_quantity, ArrayList<Stock> inventory) {
+    public Carburetor(String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory) {
         super(carbName,0,quantityOnHand);
-        requiredStock = numericalItemId_quantity;
-        //should store the arrayList as a reference location so that any updates made afterwards can alao be found in the array
+        requiredStock = itemId_quantity;
+        //should store the arrayList as a reference location so that any updates made afterwards can also be found in the array
         this.inventory = inventory;
         setCostExpenditure(getCarbCostExpenditure());
     }
@@ -23,14 +23,14 @@ public class Carburetor extends Stock{
         int quantity = 1;
         double total = 0;
         double itemPrice = 0;
-        String itemId = "";
+        int itemId = 0;
         for (int i = 0; i < requiredStock.length; i++) {
-            itemId = "ITEM-"+requiredStock[i][0];
+            itemId = requiredStock[i][0];
             quantity = requiredStock[i][1];
             //compare itemId to inventory to get price. Multiply price by
             // quantity and sum to total.
             for (Stock item : inventory) {
-                if (itemId.equals(item.getItemId())) {
+                if (itemId == item.getItemId()) {
                     itemPrice = item.getCostExpenditure();
                     //breaks the for loop once item is found
                     break;
@@ -45,14 +45,14 @@ public class Carburetor extends Stock{
     public int ableToMake() {
         //necessary variables for calculations
         int neededQuantity = 0;
-        String itemId = "";
+        int itemId = 0;
         int inventoryQuantity = 0;
         int[] values = new int[requiredStock.length];
         for (int i = 0; i < requiredStock.length; i++) {
-            itemId = "ITEM-"+requiredStock[i][0];
+            itemId = requiredStock[i][0];
             neededQuantity = requiredStock[i][1];
             for (Stock item : inventory) {
-                if (itemId.equals(item.getItemId())) {
+                if (itemId == item.getItemId()) {
                     inventoryQuantity = item.getQuantityOnHand();
                     //breaks the for loop once item is found
                     break;
@@ -72,13 +72,13 @@ public class Carburetor extends Stock{
         if (quantity <= ableToMake()) {
             setQuantityOnHand(getQuantityOnHand()+quantity);
             int neededStockQuantity = 0;
-            String itemId = "";
+            int itemId = 0;
             int index = 0;
             for (int i = 0; i < requiredStock.length; i++) {
-                itemId = "ITEM-"+requiredStock[i][0];
+                itemId = requiredStock[i][0];
                 neededStockQuantity = requiredStock[i][1];
                 for (Stock item : inventory) {
-                    if (itemId.equals(item.getItemId())) {
+                    if (itemId == item.getItemId()) {
                         index = inventory.indexOf(item);
                         //Decreases stock by the amount of resources required to build the carbs
                         inventory.get(index).useItems(neededStockQuantity * quantity);
@@ -95,13 +95,13 @@ public class Carburetor extends Stock{
     //returns list of String values showing the quantity of items needed, itemName, and itemId
     public String getItemsRequiredToMake() {
         String requiredItems = "Item ID | Item Name | Needed Quantity \n";
-        String itemId = "";
+        int itemId = 0;
         int neededStockQuantity = 0;
         for (int i = 0; i < requiredStock.length; i++) {
-            itemId = "ITEM-" + requiredStock[i][0];
+            itemId = requiredStock[i][0];
             neededStockQuantity = requiredStock[i][1];
             for (Stock item : inventory) {
-                if (itemId.equals(item.getItemId())) {
+                if (itemId == item.getItemId()) {
                     requiredItems += itemId + " | " + item.getItemName().toUpperCase() + " | " + neededStockQuantity + "\n";
                     //breaks oyt of for loop once item is found
                     break;

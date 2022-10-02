@@ -46,15 +46,7 @@ public class Stock implements Comparable<Stock> {
     private int generateItemId() {
         //getNumericalItemId requires a 5 character string here
         stockCount++;
-        Integer intId = (Integer) stockCount;
-        String stringId = intId.toString();
-        String stringReturnId = "";
-        for (int i =0 ; i<8- stringId.length(); i++) {
-            stringReturnId += 0;
-        }
-        stringReturnId += stringId;
-        int returnId = Integer.parseInt(stringReturnId);
-        return returnId;
+        return stockCount;
     }
 
     public void useItems(int amountUsed) {
