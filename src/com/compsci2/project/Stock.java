@@ -3,7 +3,7 @@ package com.compsci2.project;
 public class Stock implements Comparable<Stock> {
 
     private static int stockCount = 0;
-    private int itemId;
+    private final int itemId;
     private String itemName;
     private int quantity;
     private double costExpenditure;
@@ -44,13 +44,13 @@ public class Stock implements Comparable<Stock> {
     }
 
     private int generateItemId() {
-        //getNumericalItemId requires a 5 character string here
         stockCount++;
         return stockCount;
     }
 
     public void useItems(int amountUsed) {
-        quantity -= amountUsed;
+        if (quantity >= amountUsed) quantity -= amountUsed;
+        else throw new IllegalArgumentException("There are not enough items in the inventory to use");
     }
 
 

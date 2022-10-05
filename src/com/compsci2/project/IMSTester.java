@@ -1,6 +1,7 @@
 package com.compsci2.project;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class IMSTester {
     public static void main(String[] args) {
@@ -32,5 +33,12 @@ public class IMSTester {
         //prints new inventory to prove that necessary changes have been made
         for (Stock item : inventory) System.out.println(item);
         for (Carburetor carb : carburetors) System.out.println(carb);
+
+        int[][] sale1 = {{1,2},{4,1}};
+        LinkedList<Sale> sales = new LinkedList<>();
+        sales.add(new Sale(1,sale1,inventory,100));
+        System.out.println(sales.get(0));
+
+        for (Stock item : inventory) System.out.println(item);
     }
 }

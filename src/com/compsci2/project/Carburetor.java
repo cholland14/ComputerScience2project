@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Carburetor extends Stock{
 
-    private int[][] requiredStock;
+    private final int[][] requiredStock;
     private ArrayList<Stock> inventory;
 
     //Array should store items from stock that are necessary to build carburetor
@@ -103,7 +103,7 @@ public class Carburetor extends Stock{
             for (Stock item : inventory) {
                 if (itemId == item.getItemId()) {
                     requiredItems += itemId + " | " + item.getItemName().toUpperCase() + " | " + neededStockQuantity + "\n";
-                    //breaks oyt of for loop once item is found
+                    //breaks out of for loop once item is found
                     break;
                 }
             }
