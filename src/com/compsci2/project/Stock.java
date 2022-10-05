@@ -53,7 +53,6 @@ public class Stock implements Comparable<Stock> {
         else throw new IllegalArgumentException("There are not enough items in the inventory to use");
     }
 
-
     @Override
     public String toString() {
         return "Item{" +

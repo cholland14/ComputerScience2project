@@ -15,7 +15,22 @@ public class Carburetor extends Stock{
         requiredStock = itemId_quantity;
         //should store the arrayList as a reference location so that any updates made afterwards can also be found in the array
         this.inventory = inventory;
+        if (stockIsCarb()) throw new IllegalArgumentException("Carburetor cannot be used to build a carburetor.");
         setCostExpenditure(getCarbCostExpenditure());
+    }
+
+    private boolean stockIsCarb() {
+        int itemId = 0;
+        for (int i = 0; i < requiredStock.length; i++) {
+            itemId = requiredStock[i][0];
+            for (Stock item : inventory) {
+                if (itemId == item.getItemId()) {
+                    if (item instanceof Carburetor) return true;
+                break;
+                }
+            }
+        }
+        return false;
     }
 
     //calculates how much it costs to build a carburetor
@@ -68,7 +83,7 @@ public class Carburetor extends Stock{
 
     //removes stock needed to build the carburetor and returns a message
     // of rather or not the task is completed successfully
-    public String buildCarb(int quantity) {
+    public void buildCarb(int quantity) {
         if (quantity <= ableToMake()) {
             setQuantityOnHand(getQuantityOnHand()+quantity);
             int neededStockQuantity = 0;
@@ -87,9 +102,8 @@ public class Carburetor extends Stock{
                     }
                 }
             }
-            return "Carburetor(s) built successfully!";
         }
-        else return "Not enough resources to build carburetor!!!";
+        else throw new IllegalArgumentException("Not enough resources to build carb");
     }
 
     //returns list of String values showing the quantity of items needed, itemName, and itemId

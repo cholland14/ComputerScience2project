@@ -1,7 +1,6 @@
 package com.compsci2.project;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class Sale {
