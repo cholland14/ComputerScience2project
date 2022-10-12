@@ -8,11 +8,19 @@ public class Stock implements Comparable<Stock> {
     private int quantity;
     private double costExpenditure;
 
-    public Stock(String itemName, double costExpenditurePerItem, int quantityOnHand) {
+    public Stock(int itemId, String itemName, int quantityOnHand, double costExpenditurePerItem) {
         this.itemName = itemName;
         this.quantity = quantityOnHand;
         this.costExpenditure = costExpenditurePerItem;
-        itemId = generateItemId();
+        this.itemId = itemId;
+        stockCount++;
+    }
+
+    public Stock(String itemName, int quantityOnHand, double costExpenditurePerItem) {
+        this.itemName = itemName;
+        this.quantity = quantityOnHand;
+        this.costExpenditure = costExpenditurePerItem;
+        this.itemId = generateItemId();
     }
 
     public int getQuantityOnHand() {

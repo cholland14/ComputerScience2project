@@ -8,10 +8,19 @@ public class Carburetor extends Stock{
     private final int[][] requiredStock;
     private ArrayList<Stock> inventory;
 
+    public Carburetor(String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory) {
+        super(carbName,quantityOnHand,0);
+        requiredStock = itemId_quantity;
+        //should store the arrayList as a reference location so that any updates made afterwards can also be found in the array
+        this.inventory = inventory;
+        if (stockIsCarb()) throw new IllegalArgumentException("Carburetor cannot be used to build a carburetor.");
+        setCostExpenditure(getCarbCostExpenditure());
+    }
+
     //Array should store items from stock that are necessary to build carburetor
     //first column should contain itemId and second column should contain quantity needed
-    public Carburetor(String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory) {
-        super(carbName,0,quantityOnHand);
+    public Carburetor(int itemId, String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory) {
+        super(itemId,carbName,quantityOnHand,0);
         requiredStock = itemId_quantity;
         //should store the arrayList as a reference location so that any updates made afterwards can also be found in the array
         this.inventory = inventory;
@@ -33,7 +42,7 @@ public class Carburetor extends Stock{
         return false;
     }
 
-    //calculates how much it costs to build a carburetor
+    //calculates how much it costs to build a carburetor - if prices update this should too
     private double getCarbCostExpenditure() {
         int quantity = 1;
         double total = 0;
