@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class IMS {
 
-    //This class is not finished should add functionality for Carburetor, customers, sales, and suppliers
+    //This class is not finished it should add functionality for carburetor, customers, sales, and suppliers in the initialize() and close() methods
 
     private ArrayList<Stock> inventory;
     private File inventoryFile;
@@ -44,6 +44,7 @@ public class IMS {
                 //changes String representation of costExpenditure to double
                 double cost = Double.parseDouble(costExpenditure);
 
+                //adds inventory item from CSV to ArrayList<Stock> inventory
                 inventory.add(new Stock(id,itemName,quantity,cost));
             }
         } catch (FileNotFoundException e) {
@@ -52,6 +53,9 @@ public class IMS {
     }
 
     //When the IMS is closed, it should update all CSV files to prepare for next use.
+    //Format: the first line should include information about the stored data,
+    //        each field should end with a comma (including the final field of each row)
+    //        there should be no empty rows after the last line of data once the file has been written.
     public void close() {
         try (FileWriter inventoryWriter = new FileWriter(inventoryFile)){
             inventoryWriter.write("ItemId,ItemName,Quantity,Cost,");
