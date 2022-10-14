@@ -2,13 +2,10 @@ package com.compsci2.project;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class CSVTester {
 
     public static void main(String[] args) {
-
-        //Add formatting for calculated monetary double values (when calculating tax)
 
         //File name can be a user input in a while loop until a file is created (or there is no exception) the while loop cannot be broken out of
 
@@ -27,11 +24,7 @@ public class CSVTester {
         ArrayList<Sale> sales = new ArrayList<>();
         IMS inventoryMS = new IMS(inventory, inventoryFile, sales, salesFile, receiptPath);
 
-        int[][] sale1 = {{1,2},{4,1}};
-        int[][] sale2 = {{3,5},{4,3}};
-        sales.add(new Sale(3,sale1));
-        sales.add(new Sale(4,sale2));
-        System.out.println(sales.get(0));
+                //insert test commands here ie add stock, add sale.
 
         //IMS must be closed to update CSV files -- if we implement AutoCloseable we can surround in a try-with-resources block
         inventoryMS.close();
