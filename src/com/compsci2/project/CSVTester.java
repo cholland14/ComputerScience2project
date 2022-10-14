@@ -26,6 +26,9 @@ public class CSVTester {
 
                 //insert test commands here ie add stock, add sale.
 
+        int[][] sale1 = {{1,3}};
+        sales.add(new Sale(1,sale1));
+
         //IMS must be closed to update CSV files -- if we implement AutoCloseable we can surround in a try-with-resources block
         inventoryMS.close();
     }

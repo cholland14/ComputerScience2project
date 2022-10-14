@@ -1,5 +1,5 @@
 ItemId,ItemName,Quantity,CostExpenditure,SalePrice,
-1,carrot,896,9.0,15.0,
+1,carrot,857,9.0,15.0,
 3,banana,4905,5.0,6.0,
 4,flour,3924,2.0,6.0,
 5,beans,500,10.0,20.0,

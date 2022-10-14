@@ -35,7 +35,6 @@ public class IMS implements Closeable {
             while (in.hasNextLine()) {
                 in.nextLine();
                 saleCount++;
-                System.out.println(saleCount);
             }
         } catch (FileNotFoundException e) {
             System.out.println("Please enter a valid sales CSV file");

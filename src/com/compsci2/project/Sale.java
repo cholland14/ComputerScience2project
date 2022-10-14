@@ -11,29 +11,29 @@ public class Sale {
     private static File receiptPath;
     private static ArrayList<Stock> inventory;
     private static int saleCount = 0; //we want this to update at the start of the program.
-    private static String date; //based on date at program start, not when the date changes
     private static DecimalFormat df;
     private int receiptId;
     private int customerID;
     private int[][] soldItemId_quantity;
+    private String date;
 
     //this constructor should be called when the IMS is opened to initialize the Sales class
     //the static variables need to be set before sales start
     public Sale (String receiptPath, ArrayList<Stock> inventory, int saleCount) {
         this.receiptPath = organizeReceipts(receiptPath);
         this.inventory = inventory;
-        date = getDate();
-        //subtracting one because it gets added back when the next sale is completed
+        //subtracting one because it gets added back before the next sale is completed
         this.saleCount = saleCount-1;
         df = new DecimalFormat("#.##");
     }
 
     //Should we implement the check for saleable in another way?
     public Sale (int customerId, int[][] soldItemId_quantity) {
+        date = getDate();
         this.soldItemId_quantity = soldItemId_quantity;
         if (saleable() == true) {
             updateStock();
-            this.receiptId = generateReceiptId();
+            this.receiptId = getSaleCount();
             this.customerID = customerId;
             printReceipt();
         }
@@ -155,10 +155,6 @@ public class Sale {
         return total;
     }
 
-    private int generateReceiptId() {
-        saleCount++;
-        return saleCount;
-    }
 
     private String getDate() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -184,6 +180,12 @@ public class Sale {
         }
         return requiredItems;
     }
+    
+    private int getSaleCount() {
+        saleCount++;
+        return saleCount;
+    }
+    
 
     private String getReceiptFormat() {
         int itemId = 0;
@@ -194,12 +196,20 @@ public class Sale {
             quantitySold = soldItemId_quantity[i][1];
             for (Stock item : inventory) {
                 if (itemId == item.getItemId()) {
-                    receiptLine += quantitySold+" "+item.getItemName().toUpperCase() + "               " + (item.getSalePrice() * quantitySold) + "\n";
+                    receiptLine += (quantitySold+" "+item.getItemName().toUpperCase());
+                    receiptLine += String.format("%25.2f", (item.getSalePrice() * quantitySold));
+                    receiptLine += "\n";
                     //breaks out of for loop once item is found
                     break;
                 }
             }
         }
+        receiptLine += String.format("Subtotal: %23.2f", getSubtotal());
+        receiptLine += "\n";
+        receiptLine += String.format("Tax: %28.2f", getTax());
+        receiptLine += "\n";
+        receiptLine += String.format("Total: %26.2f", getTotal());
+        receiptLine += "\n";
         return receiptLine;
     }
 
@@ -209,10 +219,8 @@ public class Sale {
     public void printReceipt() {
         String fileName = "Receipt"+receiptId+".txt";
         try (FileWriter fw = new FileWriter(new File(receiptPath, fileName))) {
-            fw.write(getReceiptFormat()+"\n"+
-                    "Subtotal: " + getSubtotal()+"\n"+
-                    "Tax: " + getTax()+"\n"+
-                    "Total: " + getTotal());
+            fw.write(String.format("%20s","Receipt "+receiptId));
+            fw.write("\n"+getReceiptFormat());
         } catch (IOException e) {
             e.printStackTrace();
         }
