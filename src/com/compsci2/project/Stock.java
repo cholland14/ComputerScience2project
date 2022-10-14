@@ -3,24 +3,45 @@ package com.compsci2.project;
 public class Stock implements Comparable<Stock> {
 
     private static int stockCount = 0;
-    private int itemId;
+    private final int itemId;
     private String itemName;
-    private int quantity;
+    private int quantityOnHand;
     private double costExpenditure;
+    private double salePrice;
 
-    public Stock(String itemName, double costExpenditurePerItem, int quantityOnHand) {
+    //this constructor is used when an itemId has already been generated
+    public Stock(int itemId, String itemName, int quantityOnHand, double costExpenditurePerItem, double salePrice) {
         this.itemName = itemName;
-        this.quantity = quantityOnHand;
+        this.quantityOnHand = quantityOnHand;
         this.costExpenditure = costExpenditurePerItem;
-        itemId = generateItemId();
+        this.itemId = itemId;
+        this.salePrice = salePrice;
+        //stockCount should begin where last recorded inventory item ends
+        stockCount=itemId;
+    }
+
+    public Stock(String itemName, int quantityOnHand, double costExpenditurePerItem, double salePrice) {
+        this.itemName = itemName;
+        this.quantityOnHand = quantityOnHand;
+        this.costExpenditure = costExpenditurePerItem;
+        this.itemId = generateItemId();
+        this.salePrice = salePrice;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
     }
 
     public int getQuantityOnHand() {
-        return quantity;
+        return quantityOnHand;
     }
 
     public void setQuantityOnHand(int quantityOnHand) {
-        this.quantity = quantityOnHand;
+        this.quantityOnHand = quantityOnHand;
     }
 
     public String getItemName() {
@@ -44,32 +65,22 @@ public class Stock implements Comparable<Stock> {
     }
 
     private int generateItemId() {
-        //getNumericalItemId requires a 5 character string here
         stockCount++;
-        Integer intId = (Integer) stockCount;
-        String stringId = intId.toString();
-        String stringReturnId = "";
-        for (int i =0 ; i<8- stringId.length(); i++) {
-            stringReturnId += 0;
-        }
-        stringReturnId += stringId;
-        int returnId = Integer.parseInt(stringReturnId);
-        return returnId;
+        return stockCount;
     }
 
     public void useItems(int amountUsed) {
-        quantity -= amountUsed;
+        if (quantityOnHand >= amountUsed) quantityOnHand -= amountUsed;
+        else throw new IllegalArgumentException("There are not enough items in the inventory to complete the request");
     }
-
 
     @Override
     public String toString() {
-        return "Item{" +
-                "itemId= '" + itemId + '\'' +
-                ", Name= '" + itemName + '\'' +
-                ", Quantity= '" + quantity + '\''+
-                ", costExpenditure= '$" + costExpenditure + '\'' +
-                '}';
+        return getItemId()+","
+                +getItemName()+","
+                +getQuantityOnHand()+","
+                +getCostExpenditure()+","
+                +getSalePrice()+",";
     }
 
     @Override

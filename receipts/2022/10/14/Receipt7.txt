@@ -1,0 +1,6 @@
+2 CARROT               30.0
+1 FLOUR               6.0
+
+Subtotal: 36.0
+Tax: 3.2399999999999998
+Total: 39.24
