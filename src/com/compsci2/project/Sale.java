@@ -1,6 +1,7 @@
 package com.compsci2.project;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -11,6 +12,7 @@ public class Sale {
     private static ArrayList<Stock> inventory;
     private static int saleCount = 0; //we want this to update at the start of the program.
     private static String date; //based on date at program start, not when the date changes
+    private static DecimalFormat df;
     private int receiptId;
     private int customerID;
     private int[][] soldItemId_quantity;
@@ -23,6 +25,7 @@ public class Sale {
         date = getDate();
         //subtracting one because it gets added back when the next sale is completed
         this.saleCount = saleCount-1;
+        df = new DecimalFormat("#.##");
     }
 
     //Should we implement the check for saleable in another way?
@@ -94,7 +97,8 @@ public class Sale {
             }
             total += (itemPrice*quantity);
         }
-        return total;
+        double formattedTotal = Double.parseDouble(df.format(total));
+        return formattedTotal;
     }
 
     //Sales the items requested by removing stock sold
@@ -118,35 +122,39 @@ public class Sale {
     }
 
     private double getProfit() {
-        return (getSubtotal() - getCostExpenditure());
+        double profit = (getSubtotal() - getCostExpenditure());
+        return profit;
     }
 
     private double getSubtotal() {
         int itemId = 0;
         int quantitySold = 0;
-        double total = 0;
+        double subtotal = 0;
         for (int i = 0; i < soldItemId_quantity.length; i++) {
             itemId = soldItemId_quantity[i][0];
             quantitySold = soldItemId_quantity[i][1];
             for (Stock item : inventory) {
                 if (itemId == item.getItemId()) {
-                    total += (item.getSalePrice() * quantitySold);
+                    subtotal += (item.getSalePrice() * quantitySold);
                     break;
                 }
             }
         }
-        return total;
+        double formattedSubtotal = Double.parseDouble(df.format(subtotal));
+        return formattedSubtotal;
     }
 
     private double getTax() {
-        return getSubtotal() * TAX_AMOUNT;
+        double tax = getSubtotal() * TAX_AMOUNT;
+        double formattedTax = Double.parseDouble(df.format(tax));
+        return formattedTax;
     }
 
     private double getTotal() {
-        return getSubtotal() + getTax();
+        double total = (getSubtotal() + getTax());
+        return total;
     }
 
-    //receipts currently reset when the program resets -- probably not good does not consider accidental resets
     private int generateReceiptId() {
         saleCount++;
         return saleCount;
@@ -203,8 +211,8 @@ public class Sale {
         try (FileWriter fw = new FileWriter(new File(receiptPath, fileName))) {
             fw.write(getReceiptFormat()+"\n"+
                     "Subtotal: " + getSubtotal()+"\n"+
-                    "Tax: " +getTax()+"\n"+
-                    "Total: "+ getTotal());
+                    "Tax: " + getTax()+"\n"+
+                    "Total: " + getTotal());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,0 @@
-5 BANANA               30.0
-3 FLOUR               18.0
-
-Subtotal: 48.0
-Tax: 4.32
-Total: 52.32
