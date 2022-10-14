@@ -8,8 +8,9 @@ public class Carburetor extends Stock{
     private final int[][] requiredStock;
     private ArrayList<Stock> inventory;
 
-    public Carburetor(String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory) {
-        super(carbName,quantityOnHand,0);
+    //for Carburetors that already have an itemID
+    public Carburetor(String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory, double salePrice) {
+        super(carbName,quantityOnHand,0,0);
         requiredStock = itemId_quantity;
         //should store the arrayList as a reference location so that any updates made afterwards can also be found in the array
         this.inventory = inventory;
@@ -19,8 +20,8 @@ public class Carburetor extends Stock{
 
     //Array should store items from stock that are necessary to build carburetor
     //first column should contain itemId and second column should contain quantity needed
-    public Carburetor(int itemId, String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory) {
-        super(itemId,carbName,quantityOnHand,0);
+    public Carburetor(int itemId, String carbName, int quantityOnHand, int[][] itemId_quantity, ArrayList<Stock> inventory, double salePrice) {
+        super(itemId,carbName,quantityOnHand,0,0);
         requiredStock = itemId_quantity;
         //should store the arrayList as a reference location so that any updates made afterwards can also be found in the array
         this.inventory = inventory;

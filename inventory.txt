@@ -1,3 +1,5 @@
-ItemId,ItemName,Quantity,Cost,
-1,apple,5,6.0,
-2,banana,5,6.0,
+ItemId,ItemName,Quantity,CostExpenditure,SalePrice,
+1,carrot,902,9.0,15.0,
+3,banana,4920,5.0,6.0,
+4,flour,3936,2.0,6.0,
+5,beans,500,10.0,20.0,

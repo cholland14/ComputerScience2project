@@ -5,30 +5,43 @@ public class Stock implements Comparable<Stock> {
     private static int stockCount = 0;
     private final int itemId;
     private String itemName;
-    private int quantity;
+    private int quantityOnHand;
     private double costExpenditure;
+    private double salePrice;
 
-    public Stock(int itemId, String itemName, int quantityOnHand, double costExpenditurePerItem) {
+    //this constructor is used when an itemId has already been generated
+    public Stock(int itemId, String itemName, int quantityOnHand, double costExpenditurePerItem, double salePrice) {
         this.itemName = itemName;
-        this.quantity = quantityOnHand;
+        this.quantityOnHand = quantityOnHand;
         this.costExpenditure = costExpenditurePerItem;
         this.itemId = itemId;
-        stockCount++;
+        this.salePrice = salePrice;
+        //stockCount should begin where last recorded inventory item ends
+        stockCount=itemId;
     }
 
-    public Stock(String itemName, int quantityOnHand, double costExpenditurePerItem) {
+    public Stock(String itemName, int quantityOnHand, double costExpenditurePerItem, double salePrice) {
         this.itemName = itemName;
-        this.quantity = quantityOnHand;
+        this.quantityOnHand = quantityOnHand;
         this.costExpenditure = costExpenditurePerItem;
         this.itemId = generateItemId();
+        this.salePrice = salePrice;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
     }
 
     public int getQuantityOnHand() {
-        return quantity;
+        return quantityOnHand;
     }
 
     public void setQuantityOnHand(int quantityOnHand) {
-        this.quantity = quantityOnHand;
+        this.quantityOnHand = quantityOnHand;
     }
 
     public String getItemName() {
@@ -57,18 +70,17 @@ public class Stock implements Comparable<Stock> {
     }
 
     public void useItems(int amountUsed) {
-        if (quantity >= amountUsed) quantity -= amountUsed;
-        else throw new IllegalArgumentException("There are not enough items in the inventory to use");
+        if (quantityOnHand >= amountUsed) quantityOnHand -= amountUsed;
+        else throw new IllegalArgumentException("There are not enough items in the inventory to complete the request");
     }
 
     @Override
     public String toString() {
-        return "Item{" +
-                "itemId= '" + itemId + '\'' +
-                ", Name= '" + itemName + '\'' +
-                ", Quantity= '" + quantity + '\''+
-                ", costExpenditure= '$" + costExpenditure + '\'' +
-                '}';
+        return getItemId()+","
+                +getItemName()+","
+                +getQuantityOnHand()+","
+                +getCostExpenditure()+","
+                +getSalePrice()+",";
     }
 
     @Override

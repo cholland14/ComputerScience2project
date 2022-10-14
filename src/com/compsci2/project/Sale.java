@@ -1,33 +1,63 @@
 package com.compsci2.project;
 
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 public class Sale {
 
-    private static int saleCount = 0;
     private static final double TAX_AMOUNT = 0.09;
-    private final int receiptId;
-    private double salePrice;
-    private final int[][] soldItemId_quantity;
-    private ArrayList<Stock> inventory;
-    private final Date sellDate;
+    private static File receiptPath;
+    private static ArrayList<Stock> inventory;
+    private static int saleCount = 0; //we want this to update at the start of the program.
+    private static String date; //based on date at program start, not when the date changes
+    private int receiptId;
     private int customerID;
+    private int[][] soldItemId_quantity;
 
-    public Sale (int customerId, int[][] soldItemId_quantity, ArrayList<Stock> inventory, double salePrice) {
-        this.soldItemId_quantity = soldItemId_quantity;
+    //this constructor should be called when the IMS is opened to initialize the Sales class
+    //the static variables need to be set before sales start
+    public Sale (String receiptPath, ArrayList<Stock> inventory, int saleCount) {
+        this.receiptPath = organizeReceipts(receiptPath);
         this.inventory = inventory;
-        if (Saleable() == false) {
-            throw new IllegalArgumentException("There are not enough items in the inventory to complete sale!");
-        }
-        this.salePrice = salePrice;
-        this.receiptId = generateReceiptId();
-        this.customerID = customerId;
-        updateStock();
-        sellDate = new Date();
+        date = getDate();
+        //subtracting one because it gets added back when the next sale is completed
+        this.saleCount = saleCount-1;
     }
 
-    private boolean Saleable() {
+    //Should we implement the check for saleable in another way?
+    public Sale (int customerId, int[][] soldItemId_quantity) {
+        this.soldItemId_quantity = soldItemId_quantity;
+        if (saleable() == true) {
+            updateStock();
+            this.receiptId = generateReceiptId();
+            this.customerID = customerId;
+            printReceipt();
+        }
+        else System.out.println("There are not enough resources to complete sale");
+    }
+
+    //This is a file organization method for receipts
+    //Specified dir is given at program start
+    //if the folders has not already been created, then this will create them
+    //Organization: receipts\year\month\date
+    private File organizeReceipts(String receiptPath) {
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH)+1;
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        File addReceipts = new File(receiptPath);
+        if (!addReceipts.exists()) addReceipts.mkdir();
+        File addYear = new File(receiptPath+"\\"+year);
+        if (!addYear.exists()) addYear.mkdir();
+        File addMonth = new File(addYear.toString()+"\\"+month);
+        if (!addMonth.exists()) addMonth.mkdir();
+        File addDay = new File(addMonth.toString()+"\\"+day);
+        if (!addDay.exists())addDay.mkdir();
+        return addDay;
+    }
+
+    //checks that there are enough resources to initiate the sale
+    private boolean saleable() {
         int itemId = 0;
         int quantity = 1;
         for (int i = 0; i < soldItemId_quantity.length; i++) {
@@ -37,8 +67,6 @@ public class Sale {
                 if (itemId == item.getItemId()) {
                     //returns false if there is an item in the sale not in the inventory
                     if (item.getQuantityOnHand() < quantity) return false;
-                //breaks the for loop once item is found
-                break;
                 }
             }
         }
@@ -46,7 +74,7 @@ public class Sale {
         return true;
     }
 
-    //calculates how much is invested in the sale items
+    //calculates how much is invested in the items to be sold
     private double getCostExpenditure() {
         int quantity = 1;
         double total = 0;
@@ -90,24 +118,49 @@ public class Sale {
     }
 
     private double getProfit() {
-        return salePrice - getCostExpenditure();
+        return (getSubtotal() - getCostExpenditure());
+    }
+
+    private double getSubtotal() {
+        int itemId = 0;
+        int quantitySold = 0;
+        double total = 0;
+        for (int i = 0; i < soldItemId_quantity.length; i++) {
+            itemId = soldItemId_quantity[i][0];
+            quantitySold = soldItemId_quantity[i][1];
+            for (Stock item : inventory) {
+                if (itemId == item.getItemId()) {
+                    total += (item.getSalePrice() * quantitySold);
+                    break;
+                }
+            }
+        }
+        return total;
     }
 
     private double getTax() {
-        return salePrice * TAX_AMOUNT;
+        return getSubtotal() * TAX_AMOUNT;
     }
 
-    private double getTotalWithTax() {
-        return salePrice + getTax();
+    private double getTotal() {
+        return getSubtotal() + getTax();
     }
 
+    //receipts currently reset when the program resets -- probably not good does not consider accidental resets
     private int generateReceiptId() {
         saleCount++;
         return saleCount;
     }
 
-    public String itemsSold() {
-        String requiredItems = "Item ID | Item Name | Quantity Sold \n";
+    private String getDate() {
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH)+1;
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        return month + "/" + day + "/" + year;
+    }
+
+    public String getItemsSold() {
+        String requiredItems = "Item ID | Item Name | Quantity Sold | Sale Price \n";
         int itemId = 0;
         int quantitySold = 0;
         for (int i = 0; i < soldItemId_quantity.length; i++) {
@@ -115,7 +168,7 @@ public class Sale {
             quantitySold = soldItemId_quantity[i][1];
             for (Stock item : inventory) {
                 if (itemId == item.getItemId()) {
-                    requiredItems += itemId + " | " + item.getItemName().toUpperCase() + " | " + quantitySold + "\n";
+                    requiredItems += itemId + " | " + item.getItemName().toUpperCase() + " | " + quantitySold + " | " + item.getSalePrice() + "\n";
                     //breaks out of for loop once item is found
                     break;
                 }
@@ -124,17 +177,48 @@ public class Sale {
         return requiredItems;
     }
 
+    private String getReceiptFormat() {
+        int itemId = 0;
+        int quantitySold = 0;
+        String receiptLine = "";
+        for (int i = 0; i < soldItemId_quantity.length; i++) {
+            itemId = soldItemId_quantity[i][0];
+            quantitySold = soldItemId_quantity[i][1];
+            for (Stock item : inventory) {
+                if (itemId == item.getItemId()) {
+                    receiptLine += quantitySold+" "+item.getItemName().toUpperCase() + "               " + (item.getSalePrice() * quantitySold) + "\n";
+                    //breaks out of for loop once item is found
+                    break;
+                }
+            }
+        }
+        return receiptLine;
+    }
+
+    //prints a receipt to a folder called receipts -- keep a copy for records
+    //print a copy for customer
+    //Should I use a PrintWriter instead of a FileWriter?
+    public void printReceipt() {
+        String fileName = "Receipt"+receiptId+".txt";
+        try (FileWriter fw = new FileWriter(new File(receiptPath, fileName))) {
+            fw.write(getReceiptFormat()+"\n"+
+                    "Subtotal: " + getSubtotal()+"\n"+
+                    "Tax: " +getTax()+"\n"+
+                    "Total: "+ getTotal());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public String toString() {
-        return "Sale{" +
-                "receiptId=" + receiptId +
-                ", customerID=" + customerID +
-                ", salePrice=$" + salePrice +
-                ", salesTax=$" + getTax() +
-                ", totalSale=$" + getTotalWithTax() +
-                ", costExpenditure=$" + getCostExpenditure() +
-                ", profit=$" + getProfit() +
-                ", sellMade=" + sellDate +
-                '}';
+        return  receiptId + ","
+                + customerID + ","
+                + getSubtotal() + ","
+                + getTax() + ","
+                + getTotal() + ","
+                + getCostExpenditure() + ","
+                + getProfit() + ","
+                + date + ',';
     }
 }
