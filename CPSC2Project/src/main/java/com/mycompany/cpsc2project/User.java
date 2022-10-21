@@ -2,15 +2,15 @@
 package com.mycompany.cpsc2project;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+
 
 
 
 /**
- * seperate user information from user functions
+ * 
  * @author cecily holland
- * user class to store data sets userName, password, adminKey, isAdmin variables
+ * user class to store data sets userName, password, and checks to make sure that the userName is available
+ * and the password is correct
  * 
  * @userName
  * @password
@@ -21,62 +21,50 @@ public class User {
     private String userName;
     private String password;
 
-    /**
-    * Scanner object for testing 
-    */
-    Scanner in = new Scanner(System.in);
            
     /**
      * constructor with no parameters
      */
-    public User(){
-        
-    }
     
     /**
      * constructor with parameters
      * @param userName
      * @param password
-     * @param customer
-     * @param supplier
      */
-    public User(String userName, String password, String customer, String supplier){
+    public User(String userName, String password ){
         this.userName = userName;
         this.password = password;
-//        this.customer = customer;
-//        this.supplier = supplier;
-                
+
     }
     /**
      * sets userName 
+     * @param userName
      */
-    public void setUserName(){
-        System.out.println("Enter a username: ");
-        userName = in.next();
+    public void setUserName(String userName){
+        this.userName = userName;
     }
     /**
      * gets userName
      * @return userName
      */
     public String getUsername(){
-        System.out.println("Your username is: " + userName);
         return this.userName;
     }
    
     /**
      * set user password 
+     * @param password
      */
-    public void setPassword(){
-        System.out.println("Enter password: ");
-        password = in.next();
+    public void setPassword(String password){
+        this.password = password;
         
     }
 
  /**
+     * @param password
      * @return password
      */
     public String getPassword(){
-        System.out.println("Your password is: " + password);
         return this.password;
         
     }
@@ -86,20 +74,24 @@ public class User {
      * @param users
      * @return 
      */
-    public boolean exists(String userName, ArrayList<User> users ){
-        for(User user : users ){
-        if(userName.equalsIgnoreCase(user.getUsername())){
-                  return true;  
-        } else{
-            return false;
-        
+    public boolean usernameExists(String userName, ArrayList<User> users) {
+        for (User user : users) {
+            if (userName.equalsIgnoreCase(user.getUsername())) {
+                return true;
             }
         }
-    
-    public boolean correct password(){
-        
+        return false;
     }
-}
+    
+
+    public boolean correctPassword(String username, String password, ArrayList<User> users) {
+        for (User user : users) {
+            if (userName.equalsIgnoreCase(user.getUsername()) && password.equals(user.getPassword())) {
+                return true;
+            }   
+        }
+        return false;
+    }
 
 ///**
 // * add suppliers to supplier arrayList 

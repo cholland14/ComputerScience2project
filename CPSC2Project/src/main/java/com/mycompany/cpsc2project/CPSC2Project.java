@@ -1,17 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Project/Maven2/JavaApp/src/main/java/${packagePath}/${mainClassName}.java to edit this template
- */
 
 package com.mycompany.cpsc2project;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  *
- * @author cecil
+ * @author cecily holland
  */
 public class CPSC2Project {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-    }
+     /**
+         * user class object
+         */
+        Scanner in = new Scanner(System.in);
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User("cgoins0125", "123456"));
+        users.add(new User("Cec", "12"));
+        
+        LoginCheck.tryLogin(users);
+    }   
+        
 }
+
